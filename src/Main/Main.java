@@ -16,10 +16,11 @@ public class Main {
 
 	public static void main(String[] args) throws ParseException {
 		int rMenu = 0;
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-			do {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		do {
+			try {
 				System.out.println("Bienvenido al gestor de agencias");
 
 				System.out.println("Elige la agencia a la que quieres ir \n" + "1. Agencia 1.\n" + "2. Agencia 2.\n"
@@ -33,12 +34,14 @@ public class Main {
 					do {
 						System.out.println("Bienvenido a la agencia 1, que deseas hacer? \n" + "1. Visitas\n"
 								+ "2. Empleados\n" + "3. Clientes\n" + "4. Datos BD\n" + "5. Salir");
+						System.out.print("Opcion: ");
 						r = Integer.parseInt(br.readLine());
 						switch (r) {
 						case 1:
 							do {
 								System.out.println("Bienvenido a visitas:\n" + "1. Ver visitas\n" + "2. Crear visita\n"
-										+ "3. Modificar visita\n" + "4. Borrar visita\n" + "5. Atras");
+										+ "3. Modificar visita\n" + "4. Borrar visita\n" + "5. Gestionar visitas\n"
+										+ "6. Atras");
 								System.out.println("Opcion: ");
 								r = Integer.parseInt(br.readLine());
 								switch (r) {
@@ -56,11 +59,13 @@ public class Main {
 									break;
 								case 5:
 									break;
+								case 6:
+									break;
 								default:
 									System.out.println("Tiene que ser una de las opciones validas");
 									break;
 								}
-							} while (r != 5);
+							} while (r != 6);
 							break;
 						case 2:
 							do {
@@ -92,10 +97,32 @@ public class Main {
 							break;
 						case 3:
 							do {
-								System.out.println("Bienvenido a visitas:\n" + "1. Ver visitas\n" + "2. Crear visita\n"
-										+ "3. Modificar visita\n" + "4. Borrar visita\n" + "5. Atras");
+								System.out
+										.println("Bienvenido a clientes:\n" + "1. Ver clientes\n" + "2. Crear cliente\n"
+												+ "3. Modificar cliente\n" + "4. Borrar cliente\n" + "5. Atras");
 								System.out.println("Opcion: ");
 								r = Integer.parseInt(br.readLine());
+
+								switch (r) {
+								case 1:
+									Agencia1BD.selectClientes();
+									break;
+								case 2:
+									Agencia1BD.insertarCliente();
+									break;
+								case 3:
+									Agencia1BD.modificarCliente();
+									break;
+								case 4:
+									Agencia1BD.borrarCliente();
+									break;
+								case 5:
+									break;
+								default:
+									System.out.println("Tiene que ser una de las opciones validas");
+									break;
+								}
+
 							} while (r != 5);
 							break;
 						case 4:
@@ -136,15 +163,15 @@ public class Main {
 					System.out.println("Tiene que ser una de las opciones validas");
 					break;
 				}
-			} while (rMenu != 4);
-			System.out.println("Adios");
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error tiene que ser un numero!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Error tiene que ser un numero!");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} while (rMenu != 4);
+		System.out.println("Adios");
 
 	}
 
