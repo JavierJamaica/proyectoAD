@@ -8,19 +8,29 @@ package Main;
  * @date 31 oct 2022 - 22:43:29
  */
 public class Cliente {
+	private int id;
 	private String dni;
 	private String nombre;
 	private String apellidos;
 	private int edad;
 	private String profesion;
 
-	public Cliente(String dni, String nombre, String apellidos, int edad, String profesion) {
+	public Cliente(int id, String dni, String nombre, String apellidos, int edad, String profesion) {
 		super();
+		this.id = id;
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.edad = edad;
 		this.profesion = profesion;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getDni() {
@@ -65,8 +75,8 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", apellidos=" + apellidos + ", edad=" + edad
-				+ ", profesion=" + profesion + "]";
+		return "Id: " + id + ", dni: " + dni + ", nombre: " + nombre + ", apellidos: " + apellidos + ", edad: " + edad
+				+ ", profesion: " + profesion;
 	}
 
 }

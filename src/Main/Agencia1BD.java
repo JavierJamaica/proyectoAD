@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,12 +17,47 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Javier Jamaica{javiernicolas.jamaica@ikasle.egibide.org} Ejercicio 5
  * @date 17 oct 2022 - 20:49:13
  */
 public class Agencia1BD {
+
+	public static boolean comprobarClienteHorarioVisita(int idCliente, int idVisita) {
+		String sql;
+		PreparedStatement ps;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+			Statement sentencia = (Statement) conexion.createStatement();
+
+			sql = "SELECT * FROM horariovisita WHERE visitaId = ? AND clienteId = ?";
+			ps = conexion.prepareStatement(sql);
+			ps.setInt(1, idVisita);
+			ps.setInt(2, idCliente);
+			ResultSet horarioVisitaRS = ps.executeQuery();
+			while (horarioVisitaRS.next()) {
+				if (horarioVisitaRS.getInt("clienteId") == idCliente) {
+					return false;
+				}
+			}
+			sentencia.close();
+			conexion.close();// Cerrar conexion
+
+		} catch (ClassNotFoundException cn) {
+			cn.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("Tiene que ser un numero!");
+			e.printStackTrace();
+		}
+
+		return true;
+
+	}
 
 	public static boolean selectIdHorarioVisita(int idHorarioVisita) {
 		try {
@@ -122,11 +158,14 @@ public class Agencia1BD {
 			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT * FROM horariovisita");
+
 			while (resul.next()) {
+				int idVisita = resul.getInt("visitaId");
+				int idCliente = resul.getInt("clienteId");
 				System.out.println("------------------------------------");
 				System.out.println("Identificador de la visita: " + resul.getInt("idHorarioVisita") + "\n"
-						+ "Visita asignada: " + resul.getString("visitaId") + "\n" + "Cliente: "
-						+ resul.getString("clienteId") + "\n" + "Fecha: " + resul.getDate("fecha"));
+						+ "Visita asignada: " + selectClaseVisita(idVisita).toString() + "\n" + "Clientes: "
+						+ selectClaseCliente(idCliente).toString() + "\n" + "Fecha: " + resul.getDate("fecha"));
 			}
 			System.out.println("------------------------------------");
 
@@ -225,19 +264,25 @@ public class Agencia1BD {
 		}
 	}
 
-	public static Cliente selectClaseCliente(int idCliente) {
+	public static Visita selectClaseVisita(int idVisita) {
 		String sql;
 		PreparedStatement ps;
+		Visita visita = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
 			Statement sentencia = (Statement) conexion.createStatement();
 
-			sql = "SELECT * FROM cliente where idCliente = ?";
+			sql = "SELECT * FROM visitaguiada where idVisita = ?";
 			ps = conexion.prepareStatement(sql);
-			ps.setInt(1, idCliente);
-			ps.executeUpdate();
-		
+			ps.setInt(1, idVisita);
+			ResultSet visitaRS = ps.executeQuery();
+			while (visitaRS.next()) {
+				visita = new Visita(visitaRS.getInt("idVisita"), visitaRS.getString("nombreVisita"),
+						visitaRS.getString("puntoPartida"), visitaRS.getString("cursoAcademico"),
+						visitaRS.getString("tematicaVisita"), visitaRS.getDouble("costeVisita"),
+						visitaRS.getInt("numMaxClientes"), visitaRS.getInt("empleadoId"));
+			}
 			sentencia.close();
 			conexion.close();// Cerrar conexion
 
@@ -249,62 +294,101 @@ public class Agencia1BD {
 			System.out.println("Tiene que ser un numero!");
 			e.printStackTrace();
 		}
+
+		return visita;
+
+	}
+
+	public static Cliente selectClaseCliente(int idCliente) {
+		String sql;
+		PreparedStatement ps;
+		Cliente cliente = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+			Statement sentencia = (Statement) conexion.createStatement();
+
+			sql = "SELECT * FROM cliente where idCliente = ?";
+			ps = conexion.prepareStatement(sql);
+			ps.setInt(1, idCliente);
+			ResultSet clienteRS = ps.executeQuery();
+			while (clienteRS.next()) {
+				cliente = new Cliente(clienteRS.getInt("idCliente"), clienteRS.getString("dniCliente"),
+						clienteRS.getString("nombreCliente"), clienteRS.getString("apellidos"),
+						clienteRS.getInt("edadCliente"), clienteRS.getString("profesionCliente"));
+			}
+			sentencia.close();
+			conexion.close();// Cerrar conexion
+
+		} catch (ClassNotFoundException cn) {
+			cn.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("Tiene que ser un numero!");
+			e.printStackTrace();
+		}
+		return cliente;
+
 	}
 
 	public static void insertarHorarioVisita() throws ParseException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-		Empleado emple;
+
+		HorarioVisita horaVisita;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
-			selectClientes();
-			System.out.println("Escoge a un cliente para la visita");
-			System.out.print("Id: ");
-			String idCliente = br.readLine();
-			System.out.println("Escribe el dni del empleado: ");
-			System.out.print("Dni: ");
-			String dni = br.readLine();
-			System.out.println("Escribe el primer apellido: ");
-			System.out.print("Primer apellido: ");
-			String primerApellido = br.readLine();
-			System.out.println("Escribe la fecha de nacimiento ");
-			System.out.print("Fecha: ");
-			String fechaNacimiento = br.readLine();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-			Date fechaNacForm = format.parse(fechaNacimiento);
-			System.out.println("Escribe la fecha de contratacion ");
-			System.out.print("Fecha: ");
-			String fechaContratacion = br.readLine();
-			SimpleDateFormat format2 = new SimpleDateFormat("yyyy/MM/dd");
-			Date fechaContForm = format.parse(fechaContratacion);
-			System.out.println("Escribe la nacionalidad del empleado");
-			System.out.print("Nacionalidad: ");
-			String nacionalidad = br.readLine();
-			System.out.println("Escribe el cargo del empleado: ");
-			System.out.print("Cargo: ");
-			String cargo = br.readLine();
-			emple = new Empleado(dni, nombreEmple, primerApellido, fechaNacForm, fechaContForm, nacionalidad, cargo);
-			java.sql.Date fechaNacSql = new java.sql.Date(emple.getFechaNacimientoEmpleado().getTime());
-			java.sql.Date fechaContSql = new java.sql.Date(emple.getFechaContratacionEmpleado().getTime());
-			sql = "INSERT INTO `agencia1`.`empleado` (`dniEmpleado`, `nombreEmpleado`, "
-					+ "`primerApellidoEmpleado`, `fechaNacimientoEmpleado`,`fechaContratacionEmpleado`, `nacionalidadEmpleado`,`cargoEmpleado`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-			ps = conexion.prepareStatement(sql);
-			ps.setString(1, emple.getDni());
-			ps.setString(2, emple.getNombre());
-			ps.setString(3, emple.getPrimerApellido());
-			ps.setDate(4, fechaNacSql);
-			ps.setDate(5, fechaContSql);
-			ps.setString(6, emple.getNacionalidad());
-			ps.setString(7, emple.getCargo());
-			ps.executeUpdate();
-			sentencia.close();
-			conexion.close();// Cerrar conexion
-			System.out.println("Se ha agregado el empleado a la base de datos.");
+			selectVisitas();
+			System.out.println("Escoge a una visita para agendar");
+			System.out.print("Id de la visita: ");
+			int idVisita = Integer.parseInt(br.readLine());
+
+			if (selectIdVisitas(idVisita)) {
+				Visita visita = selectClaseVisita(idVisita);
+				selectClientes();
+				System.out.println("Escoge a un cliente para agendarlo en esa visita: ");
+				System.out.print("Id del cliente: ");
+				int idCliente = Integer.parseInt(br.readLine());
+				if (selectIdClientes(idCliente)) {
+					Cliente cliente = selectClaseCliente(idCliente);
+					if (comprobarClienteHorarioVisita(idCliente, idVisita)) {
+						System.out.println("Fecha (YYYY/MM/DD): ");
+						String fechaVisita = br.readLine();
+						SimpleDateFormat format = new SimpleDateFormat("YYYY/MM/DD");
+						Date fechaAgendada = format.parse(fechaVisita);
+						horaVisita = new HorarioVisita(visita, cliente, fechaAgendada);
+						java.sql.Date fechaSql = new java.sql.Date(fechaAgendada.getTime());
+
+						sql = "INSERT INTO `agencia1`.`horariovisita` (`visitaId`, `clienteId`, "
+								+ "`fecha`) VALUES (?, ?, ?)";
+						ps = conexion.prepareStatement(sql);
+						ps.setInt(1, visita.getId());
+						ps.setInt(2, cliente.getId());
+						ps.setDate(3, fechaSql);
+
+						ps.executeUpdate();
+						sentencia.close();
+						conexion.close();// Cerrar conexion
+						System.out.println("Se agendo una visita en la base de datos");
+
+					} else {
+						System.out.println("Esta visita ya tiene un cliente con ese id");
+					}
+
+				} else {
+					System.out.println("No hay un cliente con ese id");
+				}
+
+			} else {
+				System.out.println("No hay una visita con ese id");
+			}
+
 		} catch (ParseException e) {
 			System.out.println("Error tiene que ser un formato: año/mes/dia");
 
@@ -419,7 +503,7 @@ public class Agencia1BD {
 			System.out.print("Profesion: ");
 			String profesion = br.readLine();
 
-			cliente = new Cliente(dni, nombreCliente, apellidos, edad, profesion);
+			cliente = new Cliente(0, dni, nombreCliente, apellidos, edad, profesion);
 
 			sql = "INSERT INTO `agencia1`.`cliente` (`dniCliente`, `nombreCliente`, "
 					+ "`apellidos`, `edadCliente`,`profesionCliente`) VALUES (?, ?, ?, ?, ?)";
@@ -485,7 +569,7 @@ public class Agencia1BD {
 			System.out.print("Id: ");
 			int idEmpleado = Integer.parseInt(br.readLine());
 
-			vis = new Visita(nombreVis, puntoPar, cursoAca, tematica, costeVis, maxClientes, idEmpleado);
+			vis = new Visita(0, nombreVis, puntoPar, cursoAca, tematica, costeVis, maxClientes, idEmpleado);
 			sql = "INSERT INTO `agencia1`.`visitaguiada` (`nombreVisita`, `puntoPartida`, "
 					+ "`cursoAcademico`, `tematicaVisita`,`costeVisita`, `numMaxClientes`,`empleadoId`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			ps = conexion.prepareStatement(sql);
@@ -578,6 +662,47 @@ public class Agencia1BD {
 				conexion.close();// Cerrar conexion
 			} else {
 				System.out.println("No existe un empleado con ese id!");
+			}
+
+		} catch (
+
+		ClassNotFoundException cn) {
+			cn.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("Tiene que ser un numero!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void borrarHorarioVisita() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String sql;
+		PreparedStatement ps;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+			Statement sentencia = (Statement) conexion.createStatement();
+
+			selectHorarioVisita();
+			System.out.println("Escribe el id de la visita que quieres borrar: ");
+			System.out.print("Id: ");
+			int idborrar = Integer.parseInt(br.readLine());
+			if (selectIdHorarioVisita(idborrar)) {
+				sql = "DELETE FROM horariovisita where idHorarioVisita = ?";
+				ps = conexion.prepareStatement(sql);
+				ps.setInt(1, idborrar);
+				ps.executeUpdate();
+				System.out.println("Se ha borrado la visita");
+				sentencia.close();
+				conexion.close();// Cerrar conexion
+			} else {
+				System.out.println("No existe una visita con ese id!");
 			}
 
 		} catch (
@@ -884,6 +1009,82 @@ public class Agencia1BD {
 
 	}
 
+	public static void modificarHorarioVisita() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String sql;
+		PreparedStatement ps;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+
+			Statement sentencia = (Statement) conexion.createStatement();
+
+			selectHorarioVisita();
+
+			System.out.println("Escoge la visita agendada para modificar: ");
+			System.out.print("Id: ");
+			int idHorarioVisita = Integer.parseInt(br.readLine());
+			if (selectIdHorarioVisita(idHorarioVisita)) {
+				System.out.println("Que quieres modificar: \n" + "1. Visita\n" + "2. Cliente\n");
+				System.out.print("R: ");
+				int horarioVisitaModif = Integer.parseInt(br.readLine());
+
+				switch (horarioVisitaModif) {
+				case 1:
+					selectVisitas();
+					System.out.println("Escoge la nueva visita : ");
+					System.out.print("Visita");
+					int idVisita = Integer.parseInt(br.readLine());
+					sql = "UPDATE horariovisita SET visitaId = ? WHERE idHorarioVisita = ?";
+					ps = conexion.prepareStatement(sql);
+					ps.setInt(1, idVisita);
+					ps.setInt(2, idHorarioVisita);
+					ps.executeUpdate();
+					System.out.println("Se ha modificado la visita en la base de datos");
+					break;
+				case 2:
+					selectClientes();
+					System.out.println("Escoge el nuevo cliente: ");
+					System.out.print("Cliente: ");
+					int idCliente = Integer.parseInt(br.readLine());
+					sql = "UPDATE horariovisita SET clienteId = ? WHERE idHorarioVisita = ?";
+					ps = conexion.prepareStatement(sql);
+					ps.setInt(1, idCliente);
+					ps.setInt(2, idHorarioVisita);
+					ps.executeUpdate();
+					System.out.println("Se ha modicado el cliente en la base de datos");
+					break;
+
+				default:
+					System.out.println("Tiene que ser una opcion valida");
+					break;
+				}
+
+				sentencia.close();
+				conexion.close();// Cerrar conexion
+
+			} else {
+				System.out.println("No existe uan visita agendada con ese id!");
+			}
+
+		} catch (ClassNotFoundException cn) {
+			System.out.println("Error: " + cn);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Tiene que ser un numero");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error: " + e);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println("No existe ese departamento, prueba con uno que si " + "\uD83D\uDE09");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error: " + e);
+		}
+
+	}
+
 	public static void modificarVisita() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
@@ -1008,6 +1209,164 @@ public class Agencia1BD {
 			System.out.println("No existe ese departamento, prueba con uno que si " + "\uD83D\uDE09");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Error: " + e);
+		}
+
+	}
+
+	public static void datosBBDD() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+			DatabaseMetaData dbmd = conexion.getMetaData();
+
+			String nombre = dbmd.getDatabaseProductName();
+			String driver = dbmd.getDriverName();
+			String url = dbmd.getURL();
+			String usuario = dbmd.getUserName();
+
+			System.out.println("INFORMACION SOBRE LA BASE DE DATOS:\n " + " Nombre: " + nombre);
+			System.out.println("Driver : " + driver);
+			System.out.println("URL : " + url);
+			System.out.println("Usuario: " + usuario);
+
+			conexion.close();
+		} catch (ClassNotFoundException cn) {
+			System.out.println("Error: " + cn);
+		} catch (SQLException e) {
+			System.out.println("Error: " + e);
+		}
+
+	}
+
+	public static void datosTablas() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/agencia1", "root", "12345Abcde");
+			DatabaseMetaData dbmd = conexion.getMetaData();
+			ResultSet resul = null;
+			ResultSet resul1 = null;
+			ResultSet resul2 = null;
+			ResultSet resul3 = null;
+
+			String nombre = dbmd.getDatabaseProductName();
+			String driver = dbmd.getDriverName();
+			String url = dbmd.getURL();
+			String usuario = dbmd.getUserName();
+			resul = dbmd.getTables(null, "cliente", null, null);
+			resul1 = dbmd.getTables(null, "empleado", null, null);
+			resul2 = dbmd.getTables(null, "horariovisita", null, null);
+			resul3 = dbmd.getTables(null, "visitaguiada", null, null);
+
+			System.out.println("----------------------------------------------");
+			System.out.println("Tabla cliente");
+			while (resul.next()) {
+
+				String catalogo = resul.getString(1);
+				String esquema = resul.getString(2);
+				String tabla = resul.getString(3);
+				String tipo = resul.getString(4);
+				System.out.println(tipo + " - Catalogo: " + catalogo + ", Esquema: " + esquema + ", Nombre: " + tabla);
+			}
+			System.out.println("----------------------------------------------");
+
+			System.out.println("Columnas Tabla cliente: ");
+			ResultSet columnas = null;
+			columnas = dbmd.getColumns(null, "agencia1", "cliente", null);
+			while (columnas.next()) {
+				String nomCol = columnas.getString("COLUMN_NAME");
+				String tipoCol = columnas.getString("TYPE_NAME");
+				String tamCol = columnas.getString("COLUMN_SIZE");
+				String nula = columnas.getString("IS_NULLABLE");
+				System.out.printf("Columna: %s, Tipo: %s, Tamaño: %s, ¿Puede ser nula? %s %n", nomCol, tipoCol, tamCol,
+						nula);
+			}
+			
+			System.out.println("----------------------------------------------");
+
+			System.out.println("----------------------------------------------");
+			System.out.println("Tabla empleado");
+			while (resul1.next()) {
+
+				String catalogo = resul1.getString(1);
+				String esquema = resul1.getString(2);
+				String tabla = resul1.getString(3);
+				String tipo = resul1.getString(4);
+				System.out.println(tipo + " - Catalogo: " + catalogo + ", Esquema: " + esquema + ", Nombre: " + tabla);
+			}
+			System.out.println("----------------------------------------------");
+
+			System.out.println("Columnas tabla visitaguiada");
+
+			columnas = dbmd.getColumns(null, "agencia1", "empleado", null);
+			while (columnas.next()) {
+				String nomCol = columnas.getString("COLUMN_NAME");
+				String tipoCol = columnas.getString("TYPE_NAME");
+				String tamCol = columnas.getString("COLUMN_SIZE");
+				String nula = columnas.getString("IS_NULLABLE");
+				System.out.printf("Columna: %s, Tipo: %s, Tamaño: %s, ¿Puede ser nula? %s %n", nomCol, tipoCol, tamCol,
+						nula);
+			}
+			
+			System.out.println("----------------------------------------------");
+
+			System.out.println("----------------------------------------------");
+			System.out.println("Tabla horariovisita");
+			while (resul2.next()) {
+
+				String catalogo = resul2.getString(1);
+				String esquema = resul2.getString(2);
+				String tabla = resul2.getString(3);
+				String tipo = resul2.getString(4);
+				System.out.println(tipo + " - Catalogo: " + catalogo + ", Esquema: " + esquema + ", Nombre: " + tabla);
+			}
+			System.out.println("----------------------------------------------");
+
+			System.out.println("Columnas tabla visitaguiada");
+
+			columnas = dbmd.getColumns(null, "agencia1", "horariovisita", null);
+			while (columnas.next()) {
+				String nomCol = columnas.getString("COLUMN_NAME");
+				String tipoCol = columnas.getString("TYPE_NAME");
+				String tamCol = columnas.getString("COLUMN_SIZE");
+				String nula = columnas.getString("IS_NULLABLE");
+				System.out.printf("Columna: %s, Tipo: %s, Tamaño: %s, ¿Puede ser nula? %s %n", nomCol, tipoCol, tamCol,
+						nula);
+			}
+			
+			System.out.println("----------------------------------------------");
+
+			System.out.println("----------------------------------------------");
+			System.out.println("Tabla visitaguiada");
+			while (resul3.next()) {
+
+				String catalogo = resul3.getString(1);
+				String esquema = resul3.getString(2);
+				String tabla = resul3.getString(3);
+				String tipo = resul3.getString(4);
+				System.out.println(tipo + " - Catalogo: " + catalogo + ", Esquema: " + esquema + ", Nombre: " + tabla);
+			}
+			System.out.println("----------------------------------------------");
+
+			System.out.println("Columnas tabla visitaguiada");
+			columnas = dbmd.getColumns(null, "agencia1", "visitaguiada", null);
+			while (columnas.next()) {
+				String nomCol = columnas.getString("COLUMN_NAME");
+				String tipoCol = columnas.getString("TYPE_NAME");
+				String tamCol = columnas.getString("COLUMN_SIZE");
+				String nula = columnas.getString("IS_NULLABLE");
+				System.out.printf("Columna: %s, Tipo: %s, Tamaño: %s, ¿Puede ser nula? %s %n", nomCol, tipoCol, tamCol,
+						nula);
+			}
+			System.out.println("----------------------------------------------");
+
+	
+
+			conexion.close();
+		} catch (ClassNotFoundException cn) {
+			System.out.println("Error: " + cn);
+		} catch (SQLException e) {
 			System.out.println("Error: " + e);
 		}
 

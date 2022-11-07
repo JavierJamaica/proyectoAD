@@ -8,6 +8,7 @@ package Main;
  * @date 24 oct 2022 - 19:21:37
  */
 public class Visita {
+	private int id;
 	private String nombre;
 	private String puntoPartida;
 	private String cursoAcademico;
@@ -16,9 +17,10 @@ public class Visita {
 	private int maxClientes;
 	private int empleadoId;
 
-	public Visita(String nombre, String puntoPartida, String cursoAcademico, String tematica, double coste,
+	public Visita(int id, String nombre, String puntoPartida, String cursoAcademico, String tematica, double coste,
 			int maxClientes, int empleadoId) {
 		super();
+		this.id = id;
 		this.nombre = nombre;
 		this.puntoPartida = puntoPartida;
 		this.cursoAcademico = cursoAcademico;
@@ -26,6 +28,14 @@ public class Visita {
 		this.coste = coste;
 		this.maxClientes = maxClientes;
 		this.empleadoId = empleadoId;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -86,9 +96,9 @@ public class Visita {
 
 	@Override
 	public String toString() {
-		return "Visita [nombre=" + nombre + ", puntoPartida=" + puntoPartida + ", cursoAcademico=" + cursoAcademico
-				+ ", tematica=" + tematica + ", coste=" + coste + ", maxClientes=" + maxClientes + ", empleadoId="
-				+ empleadoId + "]";
+		return "Id: " + id + ", nombre: " + nombre + ", punto de partida: " + puntoPartida + ", curso academico: "
+				+ cursoAcademico + ", tematica: " + tematica + ", coste: " + coste + ", numero maximo de clientes: "
+				+ maxClientes + ", empleado asignado: " + empleadoId;
 	}
 
 }
