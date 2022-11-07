@@ -1249,7 +1249,7 @@ public class Agencia2BD {
 			String url = dbmd.getURL();
 			String usuario = dbmd.getUserName();
 
-			System.out.println("INFORMACION SOBRE LA BASE DE DATOS:\n " + "Nombre: " + nombre);
+			System.out.println("INFORMACION SOBRE LA BASE DE DATOS:\n" + "Nombre: " + nombre);
 			System.out.println("Driver : " + driver);
 			System.out.println("URL : " + url);
 			System.out.println("Usuario: " + usuario);
