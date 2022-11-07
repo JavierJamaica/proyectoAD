@@ -1,6 +1,3 @@
-/**
- * 
- */
 package Main;
 
 import java.io.BufferedReader;
@@ -30,7 +27,7 @@ public class Agencia3BD {
 		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			 conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			sql = "SELECT * FROM horariovisita WHERE visitaId = ? AND clienteId = ?";
@@ -45,7 +42,6 @@ public class Agencia3BD {
 			}
 			horarioVisitaRS.close();
 			sentencia.close();
-			
 			ps.close();
 		} catch (ClassNotFoundException cn) {
 			cn.printStackTrace();
@@ -62,10 +58,11 @@ public class Agencia3BD {
 
 	}
 
-	public static boolean selectIdHorarioVisita(int idHorarioVisita) {
+	public static boolean selectIdHorarioVisita(int idHorarioVisita) throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia)
 					.executeQuery("SELECT idHorarioVisita FROM horariovisita");
@@ -77,19 +74,23 @@ public class Agencia3BD {
 			}
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
+
 		return false;
 	}
 
-	public static boolean selectIdClientes(int idCliente) {
+	public static boolean selectIdClientes(int idCliente) throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT idCliente FROM cliente");
 			while (resul.next()) {
@@ -100,19 +101,22 @@ public class Agencia3BD {
 			}
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 		return false;
 	}
 
-	public static boolean selectIdEmpleados(int idEmpleado) {
+	public static boolean selectIdEmpleados(int idEmpleado) throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT idEmpleado FROM empleado");
 			while (resul.next()) {
@@ -123,19 +127,22 @@ public class Agencia3BD {
 			}
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 		return false;
 	}
 
-	public static boolean selectIdVisitas(int idVisita) {
+	public static boolean selectIdVisitas(int idVisita) throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT idVisita FROM visitaguiada");
 			while (resul.next()) {
@@ -146,19 +153,22 @@ public class Agencia3BD {
 			}
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 		return false;
 	}
 
-	public static void selectHorarioVisita() {
+	public static void selectHorarioVisita() throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT * FROM horariovisita");
 
@@ -174,18 +184,21 @@ public class Agencia3BD {
 
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 	}
 
-	public static void selectClientes() {
+	public static void selectClientes() throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT * FROM cliente");
@@ -201,18 +214,21 @@ public class Agencia3BD {
 
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 	}
 
-	public static void selectEmpleados() {
+	public static void selectEmpleados() throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT * FROM empleado");
 			while (resul.next()) {
@@ -230,18 +246,21 @@ public class Agencia3BD {
 
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 	}
 
-	public static void selectVisitas() {
+	public static void selectVisitas() throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 			ResultSet resul = ((java.sql.Statement) sentencia).executeQuery("SELECT * FROM visitaguiada");
 			while (resul.next()) {
@@ -260,21 +279,23 @@ public class Agencia3BD {
 
 			resul.close();// Cerrar ResultSet
 			sentencia.close();
-			conexion.close();// Cerrar conexion
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 	}
 
-	public static Visita selectClaseVisita(int idVisita) {
+	public static Visita selectClaseVisita(int idVisita) throws SQLException {
 		String sql;
 		PreparedStatement ps;
 		Visita visita = null;
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			sql = "SELECT * FROM visitaguiada where idVisita = ?";
@@ -289,7 +310,7 @@ public class Agencia3BD {
 			}
 			visitaRS.close();
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 			ps.close();
 
 		} catch (ClassNotFoundException cn) {
@@ -299,19 +320,22 @@ public class Agencia3BD {
 		} catch (NumberFormatException e) {
 			System.out.println("Tiene que ser un numero!");
 			e.printStackTrace();
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
 
 		return visita;
 
 	}
 
-	public static Cliente selectClaseCliente(int idCliente) {
+	public static Cliente selectClaseCliente(int idCliente) throws SQLException {
 		String sql;
 		PreparedStatement ps;
 		Cliente cliente = null;
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			sql = "SELECT * FROM cliente where idCliente = ?";
@@ -325,7 +349,7 @@ public class Agencia3BD {
 			}
 			clienteRS.close();
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 			ps.close();
 
 		} catch (ClassNotFoundException cn) {
@@ -335,20 +359,23 @@ public class Agencia3BD {
 		} catch (NumberFormatException e) {
 			System.out.println("Tiene que ser un numero!");
 			e.printStackTrace();
+		} finally {
+			conexion.close();// Cerrar conexion
 		}
+
 		return cliente;
 
 	}
 
-	public static void insertarHorarioVisita() throws ParseException {
+	public static void insertarHorarioVisita() throws ParseException, SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		HorarioVisita horaVisita;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -381,7 +408,7 @@ public class Agencia3BD {
 
 						ps.executeUpdate();
 						sentencia.close();
-						conexion.close();// Cerrar conexion
+
 						ps.close();
 
 						System.out.println("Se agendo una visita en la base de datos");
@@ -411,18 +438,21 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void insertarEmpleado() throws ParseException {
+	public static void insertarEmpleado() throws ParseException, SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
 		Empleado emple;
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -466,7 +496,6 @@ public class Agencia3BD {
 			ps.setString(7, emple.getCargo());
 			ps.executeUpdate();
 			sentencia.close();
-			conexion.close();// Cerrar conexion
 			ps.close();
 
 			System.out.println("Se ha agregado el empleado a la base de datos.");
@@ -483,18 +512,21 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void insertarCliente() throws ParseException {
+	public static void insertarCliente() throws ParseException, SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
 		Cliente cliente;
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -528,8 +560,6 @@ public class Agencia3BD {
 			sentencia.close();
 			ps.close();
 
-			conexion.close();// Cerrar conexion
-
 			System.out.println("Se ha agregado el cliente a la base de datos.");
 
 		} catch (ClassNotFoundException cn) {
@@ -542,18 +572,21 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void insertarVisita() {
+	public static void insertarVisita() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
 		Visita vis;
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -597,7 +630,7 @@ public class Agencia3BD {
 			ps.close();
 
 			sentencia.close();
-			conexion.close();// Cerrar conexion
+
 			System.out.println("Se ha agregado la visita a la base de datos.");
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
@@ -609,18 +642,20 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void borrarCliente() {
+	public static void borrarCliente() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			selectClientes();
@@ -634,7 +669,7 @@ public class Agencia3BD {
 				ps.executeUpdate();
 				System.out.println("Se ha borrado el cliente de la base de datos");
 				sentencia.close();
-				conexion.close();// Cerrar conexion
+
 				ps.close();
 
 			} else {
@@ -651,17 +686,19 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conexion.close();
 		}
 	}
 
-	public static void borrarEmpleado() {
+	public static void borrarEmpleado() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			selectEmpleados();
@@ -675,7 +712,6 @@ public class Agencia3BD {
 				ps.executeUpdate();
 				System.out.println("Se ha borrado el empleado de la base de datos");
 				sentencia.close();
-				conexion.close();// Cerrar conexion
 				ps.close();
 
 			} else {
@@ -694,17 +730,19 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conexion.close();
 		}
 	}
 
-	public static void borrarHorarioVisita() {
+	public static void borrarHorarioVisita() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			selectHorarioVisita();
@@ -720,7 +758,6 @@ public class Agencia3BD {
 				sentencia.close();
 				ps.close();
 
-				conexion.close();// Cerrar conexion
 			} else {
 				System.out.println("No existe una visita con ese id!");
 			}
@@ -737,17 +774,19 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conexion.close();
 		}
 	}
 
-	public static void borrarVisita() {
+	public static void borrarVisita() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			selectVisitas();
@@ -761,7 +800,6 @@ public class Agencia3BD {
 				ps.executeUpdate();
 				System.out.println("Se ha borrado la visita");
 				sentencia.close();
-				conexion.close();// Cerrar conexion
 				ps.close();
 
 			} else {
@@ -780,17 +818,19 @@ public class Agencia3BD {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conexion.close();
 		}
 	}
 
-	public static void modificarEmpleado() {
+	public static void modificarEmpleado() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			Statement sentencia = (Statement) conexion.createStatement();
 
 			selectEmpleados();
@@ -909,7 +949,6 @@ public class Agencia3BD {
 				}
 
 				sentencia.close();
-				conexion.close();// Cerrar conexion
 
 			} else {
 				System.out.println("No existe un empleado con ese id!");
@@ -931,18 +970,20 @@ public class Agencia3BD {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void modificarCliente() {
+	public static void modificarCliente() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -1030,7 +1071,6 @@ public class Agencia3BD {
 				}
 
 				sentencia.close();
-				conexion.close();// Cerrar conexion
 
 			} else {
 				System.out.println("No existe un empleado con ese id!");
@@ -1049,18 +1089,20 @@ public class Agencia3BD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void modificarHorarioVisita() {
+	public static void modificarHorarioVisita() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -1110,7 +1152,6 @@ public class Agencia3BD {
 				}
 
 				sentencia.close();
-				conexion.close();// Cerrar conexion
 
 			} else {
 				System.out.println("No existe uan visita agendada con ese id!");
@@ -1129,18 +1170,19 @@ public class Agencia3BD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
-
 	}
 
-	public static void modificarVisita() {
+	public static void modificarVisita() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String sql;
 		PreparedStatement ps;
-
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 
 			Statement sentencia = (Statement) conexion.createStatement();
 
@@ -1254,7 +1296,7 @@ public class Agencia3BD {
 				}
 
 				sentencia.close();
-				conexion.close();// Cerrar conexion
+
 			} else {
 				System.out.println("No existe una visita con ese id!");
 			}
@@ -1272,14 +1314,17 @@ public class Agencia3BD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void datosBBDD() {
+	public static void datosBBDD() throws SQLException {
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			DatabaseMetaData dbmd = conexion.getMetaData();
 
 			String nombre = dbmd.getDatabaseProductName();
@@ -1292,20 +1337,22 @@ public class Agencia3BD {
 			System.out.println("URL : " + url);
 			System.out.println("Usuario: " + usuario);
 
-			conexion.close();
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
 
-	public static void datosTablas() {
+	public static void datosTablas() throws SQLException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Connection conexion = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
+			conexion = DriverManager.getConnection("jdbc:sqlite:C:\\BD\\agencia3.s3db");
 			DatabaseMetaData dbmd = conexion.getMetaData();
 			ResultSet resul = null;
 			ResultSet resul1 = null;
@@ -1429,11 +1476,12 @@ public class Agencia3BD {
 
 			resul3.close();
 
-			conexion.close();
 		} catch (ClassNotFoundException cn) {
 			System.out.println("Error: " + cn);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
+		} finally {
+			conexion.close();
 		}
 
 	}
